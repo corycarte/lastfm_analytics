@@ -139,3 +139,4 @@ cython_debug/
 
 # Do not track local config.yaml
 config.yaml
+**/out/*
