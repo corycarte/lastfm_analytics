@@ -8,8 +8,13 @@ def setup_out_dir(dir: str) -> None:
 def save_csv(tracks:list, out_file:str) -> None:
     print(f'Saving {len(tracks)} tracks to {out_file}')
 
-    with open(out_file, 'w') as writer:
-        writer.writelines(f'{last_fm.csv_headers()}\n')
+
+    write_header = True if not os.path.exists(out_file) else False
+
+    with open(out_file, 'a') as writer:
+
+        if write_header:
+            writer.writelines(f'{last_fm.csv_headers()}\n')
 
         for track in tracks:
             try:

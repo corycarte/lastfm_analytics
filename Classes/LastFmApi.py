@@ -14,6 +14,7 @@ class LastFmApi:
         self._api_key = api_key
 
     def set_user(self, user: str):
+        print(f'Setting current user to {user}')
         self._user = user
 
     def _make_api_request(self, endpoint: str):

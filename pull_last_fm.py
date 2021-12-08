@@ -25,6 +25,7 @@ if __name__ == '__main__':
             api_key = conf["api_key"]
             time_range = conf["default_time_range"]
             output_dir = conf["output_dir"]
+            output_file = conf["output_file"]
             last_pull_date = conf["last_pull_date"]
         except yaml.YAMLError as exc:
             print(f'Configuration Load Error: {exc}')
@@ -37,11 +38,13 @@ if __name__ == '__main__':
         tracklist = last_fm.pull_since(last_pull_date)
     except Exception as ex:
         print(f'LastFMApi Error: {ex}')
+    
+    if tracklist:
+        outfile = os.path.join(output_dir, output_file)
+        save.setup_out_dir(output_dir)
+        save.save_csv(tracklist, outfile)
 
-    outfile = os.path.join(output_dir, f'{today.strftime("%Y%m%d-%H%M")}_last_fm_data_pull.csv')
-    save.setup_out_dir(output_dir)
-    save.save_csv(tracklist, outfile)
+        with open("config.yaml", "w") as update_config:
+            conf["last_pull_date"] = today
+            yaml.dump(conf, update_config, default_flow_style=False)
 
-    with open("config.yaml", "w") as update_config:
-        conf["last_pull_date"] = today
-        yaml.dump(conf, update_config, default_flow_style=False)
